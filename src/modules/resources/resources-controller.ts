@@ -53,53 +53,11 @@ export class ResourcesController{
         res.send('ok')
     }
 
-    async findAll(req: Request, res: Response) {
-        const {id, resource_name: resource_type } = req.params
-        const data = await ResourceModel.find({ resource_type })
-
-        ResourceModel.aggregate([{
-            $lookup: {
-              from: "address",
-              localField: "_id",
-              foreignField: "party_id",
-              as: "address"
-            }
-          }, {
-            $unwind: {
-              path: "$address",
-              preserveNullAndEmptyArrays: true
-            }
-          }, {
-            $lookup: {
-              from: "addressComment",
-              localField: "address._id",
-              foreignField: "address_id",
-              as: "address.addressComment",
-            }
-          }, {
-            $group: {
-              _id : "$_id",
-              name: { $first: "$name" },
-              address: { $push: "$address" }
-            }
-          }, {
-            $project: {
-              _id: 1,
-              name: 1,
-              address: {
-                $filter: { input: "$address", as: "a", cond: { $ifNull: ["$$a._id", false] } }
-              } 
-            }
-        }]);
-        res.send(data)
-    }
-
     async getTeams(req: Request, res: Response) {
         const { id } = req.params
         const data = await ResourceModel.aggregate([{ 
             $lookup: { 
                 from: 'resources', 
-                // let: {  },
                 localField: 'projects', 
                 foreignField: '_id', 
                 as: 'projects', 
@@ -113,7 +71,21 @@ export class ResourcesController{
     async getProjects(req: Request, res: Response) {
         const { id } = req.params
         const data = await ResourceModel.aggregate([
-            { $lookup: { from: 'resources', localField: 'sections', foreignField: '_id', as: 'sections' } },
+            { $lookup: { 
+                from: 'resources', 
+                localField: 'sections', 
+                foreignField: '_id', 
+                as: 'sections',
+                pipeline: [
+                  { $lookup: {
+                    from: "resources",
+                    foreignField: '_id',
+                    localField: 'tasks', 
+                    as: "tasks"
+                  }}
+                ]
+              } 
+            },
             { "$match": { "_id": new ObjectId(id) } },
         ])
         res.send(data[0])
