@@ -10,7 +10,6 @@ export class Resources{
         router.get('/menus', controller.menus)
         router.get('/team/:id', controller.getTeams)
         router.get('/project/:id', controller.getProjects)
-        router.get('/:resource_name/:id', controller.findAll)
         router.post('/insert', controller.insert)
         app.use('/resources', router)
     }
