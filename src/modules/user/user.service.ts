@@ -1,9 +1,9 @@
-import { AppDataSource } from "../../app";
-import { UserEntity } from "./user.entity";
+import { AppDataSource } from '../../app';
+import { UserEntity } from './user.entity';
 
 export class UserService{
     users() {
-        return AppDataSource.getRepository(UserEntity).find()
+        return AppDataSource.getRepository(UserEntity).find();
     }
      
 
@@ -14,6 +14,6 @@ export class UserService{
             where: {
                 id: Number(id)
             }
-        })
+        });
     }
 }
