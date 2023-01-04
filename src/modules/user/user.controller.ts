@@ -1,13 +1,12 @@
-import { Request, Response } from "express"
-import mongoose from 'mongoose';
-import { UserService } from "./user-service"
-import UserModel from "../../models/user.model";
+import { Request, Response } from 'express';
+import UserModel from '../../models/user.model';
+import { UserService } from './user.service';
 
 export class UserController{
-    resourceService: any
-    userService: UserService
+    resourceService: any;
+    userService: UserService;
     constructor(){
-        this.userService = new UserService()
+        this.userService = new UserService();
     }
 
     async index(req: Request, res: Response){
@@ -27,8 +26,8 @@ export class UserController{
 
 
     async getOne(req: Request, res: Response){
-        const { id } = req.params
-        const data = await this.userService.getOne(id)
-        res.send(data)
+        const { id } = req.params;
+        const data = await this.userService.getOne(id);
+        res.send(data);
     }
 }
