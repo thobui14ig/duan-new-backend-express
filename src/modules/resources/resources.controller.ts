@@ -24,28 +24,35 @@ export class ResourcesController{
 
     async insert(req: Request, res: Response){
         console.log(req.body);
-        const { team, resource_type, project, sections } = req.body;
+        const { team, resource_type, project, sections, task } = req.body;
         
 
         const resource = await ResourceModel.create({ ...req.body, createdBy: '63a6cae6d4b4cc4dde8f9098' });
         if(resource_type === 'project'){
-            return ResourceModel.updateOne(
+            await ResourceModel.updateOne(
                 { _id: team },
                 { $push: { projects: resource._id } }
             );            
         }
 
         if(resource_type === 'section'){
-            return ResourceModel.updateOne(
+            await ResourceModel.updateOne(
                 { _id: project },
                 { $push: { sections: resource._id } }
             );            
         }
 
         if(resource_type === 'task'){
-            return ResourceModel.updateOne(
+            await ResourceModel.updateOne(
                 { _id: sections[0] },
                 { $push: { tasks: resource._id } }
+            );            
+        }
+
+        if(resource_type === 'comment'){
+            await ResourceModel.updateOne(
+                { _id: task },
+                { $push: { comments: resource._id } }
             );            
         }
 
@@ -89,6 +96,43 @@ export class ResourcesController{
             { '$match': { '_id': new ObjectId(id) } },
         ]);
         res.send(data[0]);
+    }
+
+    async getComments (req: Request, res: Response) {
+        const { id } = req.params;
+        const task = await ResourceModel.aggregate([{ 
+            $lookup: { 
+                from: 'resources', 
+                localField: 'comments', 
+                foreignField: '_id', 
+                as: 'comments', 
+                pipeline: [
+                    { $lookup: {
+                        from: 'users',
+                        foreignField: '_id',
+                        localField: 'createdBy', 
+                        as: 'createdBy'
+                    }},
+                    {
+                        $unwind: '$createdBy' //chi tao ra object
+                    }
+                ]
+            } 
+        },{ 
+            $lookup: { 
+                from: 'users', 
+                localField: 'createdBy', 
+                foreignField: '_id', 
+                as: 'createdBy', 
+            } 
+        }, 
+        {
+            $unwind: '$createdBy' //chi tao ra object
+        },
+        { '$match': { '_id': new ObjectId(id) } },
+        ]);
+
+        res.send(task[0]);
     }
 
 }

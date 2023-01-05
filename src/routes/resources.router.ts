@@ -9,6 +9,7 @@ export class Resources{
         // router.get('/', controller.index)
         router.get('/menus', controller.menus);
         router.get('/team/:id', controller.getTeams);
+        router.get('/comments/:id', controller.getComments);
         router.get('/project/:id', controller.getProjects);
         router.post('/insert', controller.insert);
         app.use('/resources', router);
