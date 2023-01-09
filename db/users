@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "63a6cae6d4b4cc4dde8f9098"
+  },
+  "email": "buithanhtho15ig@gmail.com",
+  "name": "thobui1",
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1671875302637"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1673024885171"
+    }
+  },
+  "password": "111111",
+  "refreshToken": "RLbwC7vkBGMlFeXjdDMIV254YNpvhmDcPs30e9wSDoKTqGupMhSLyxymO2exXu9YXTLFLgSgD6NQgbFnFsweBj0etfYNSNl5Ns2G"
+}]
