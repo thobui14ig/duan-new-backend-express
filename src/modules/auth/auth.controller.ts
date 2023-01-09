@@ -65,4 +65,64 @@ export class AuthController{
         });
     }
 
+    async refreshToken(req: Request, res: Response){
+        const accessTokenFromHeader = req.headers.x_authorization;
+        if (!accessTokenFromHeader) {
+            return res.status(400).send('Không tìm thấy access token.');
+        }
+
+        const refreshTokenFromBody = req.body.refreshToken;
+        if (!refreshTokenFromBody) {
+            return res.status(400).send('Không tìm thấy refresh token.');
+        }
+
+        const accessTokenSecret =
+		process.env.ACCESS_TOKEN_SECRET || jwtVariable.accessTokenSecret;
+        const accessTokenLife =
+            process.env.ACCESS_TOKEN_LIFE || jwtVariable.accessTokenLife;
+
+        // Decode access token đó
+        const decoded = await this.service.decodeToken(
+            accessTokenFromHeader,
+            accessTokenSecret,
+        );
+
+        if (!decoded) {
+            return res.status(400).send('Access token không hợp lệ.');
+        }
+    
+        const name = decoded.payload.name;
+
+        const user = await UserModel.findOne({
+            name
+        });
+
+
+        if (!user) {
+            return res.status(401).send('User không tồn tại.');
+        }
+
+        if (refreshTokenFromBody !== user.refreshToken) {
+            return res.status(400).send('Refresh token không hợp lệ.');
+        }
+
+        const dataForAccessToken = {
+            name,
+        };
+
+        const accessToken = await this.service.generateToken(
+            dataForAccessToken,
+            accessTokenSecret,
+            accessTokenLife,
+        );
+        if (!accessToken) {
+            return res
+                .status(400)
+                .send('Tạo access token không thành công, vui lòng thử lại.');
+        }
+        return res.send({
+            accessToken,
+        });
+    }
+
 }

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../../models/user.model';
 const promisify = require('util').promisify;
 const sign = promisify(jwt.sign).bind(jwt);
+const verify = promisify(jwt.verify).bind(jwt);
 
 export class AuthService{
     async generateToken(payload: any, secretSignature: any, tokenLife: any){
@@ -31,6 +32,26 @@ export class AuthService{
             return true;
         } catch {
             return false;
+        }
+    }
+
+    async decodeToken(token: any, secretKey: any){
+        try {
+            return await verify(token, secretKey, {
+                ignoreExpiration: true,
+            });
+        } catch (error) {
+            console.log(`Error in decode access token: ${error}`);
+            return null;
+        }
+    }
+
+    async verifyToken(token: string, secretKey: any){
+        try {
+            return await verify(token, secretKey);
+        } catch (error) {
+            console.log(`Error in verify access token:  + ${error}`);
+            return null;
         }
     }
 }
