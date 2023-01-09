@@ -26,9 +26,9 @@ export const AppDataSource = new DataSource({
 });
 
 try{
-    AppDataSource.initialize().then(() => {
-        Logging.info('DB Connected!');
-    }).catch((err) => Logging.error('ConnectDB sql error!'));
+    // AppDataSource.initialize().then(() => {
+    //     Logging.info('DB Connected!');
+    // }).catch((err) => Logging.error('ConnectDB sql error!'));
 
     mongoose
         .connect(config.mongo.url, { retryWrites: true, w: 'majority', dbName: config.mongo.db })
