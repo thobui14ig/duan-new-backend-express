@@ -1,13 +1,14 @@
 
 import express from 'express';
+import { isAuth } from '../modules/auth/middlewares/isAuth.middleware';
 import { ResourcesController } from '../modules/resources/resources.controller';
 const router = express.Router();
 
 export class Resources{
     constructor(app: any){
         const controller = new ResourcesController();
-        // router.get('/', controller.index)
         router.get('/menus', controller.menus);
+        // router.get('/menus', isAuth, controller.menus);
         router.get('/team/:id', controller.getTeams);
         router.get('/comments/:id', controller.getComments);
         router.get('/project/:id', controller.getProjects);

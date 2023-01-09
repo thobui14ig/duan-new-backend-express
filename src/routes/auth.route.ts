@@ -7,6 +7,7 @@ export class Auth{
     constructor(app: any){
         const controller = new AuthController();
         router.post('/login', (req, res) => controller.login(req, res));
+        router.post('/refresh', (req, res) => controller.refreshToken(req, res));
         app.use('/auth', router);
     }
 }

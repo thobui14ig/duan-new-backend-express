@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export class ResourcesController{
 
-    async menus(req: any, res: any){
+    async menus(req: Request, res: Response){
         const data = await ResourceModel.aggregate([
             { $lookup: { from: 'resources', localField: 'projects', foreignField: '_id', as: 'projects' } },
             // {
