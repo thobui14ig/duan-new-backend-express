@@ -1,21 +1,24 @@
-#1 Backend:
-    ##1.Cài đặt database.
-        ##-Download monggo commpass: https://www.mongodb.com/try/download/compass
-        ##-Kết nối mongo compass: mongodb+srv://root:root@cluster0.0aue7m9.mongodb.net
-    ##2.Run: yarn start:dev
+```ts
+1.Backend:
+    1.Cài đặt database.
+        -Download monggo commpass: https://www.mongodb.com/try/download/compass
+        -Kết nối mongo compass: mongodb+srv://root:root@cluster0.0aue7m9.mongodb.net
+    2.Run: yarn start:dev
 
-#2 Frontend:
-    ##1.Run: yarn start
+2.Frontend:
+    1.Run: yarn start
 
-##Cấu trúc database như sau:
+
+Cấu trúc database như sau:
     ##-Team(1 team chứa nhiều project), 
     ##-project(1 project chỉ thuộc 1 team), 
     ##-section(1 section thuộc 1 project), 
     ##-task(1 task thuộc nhiều section), 
     ##-comment...(Tất cả nằm trong conllection resources)
 
-##Cấu trúc conllection resources gồm các trường chính sau:
-```ts
+
+Cấu trúc conllection resources gồm các trường chính sau:
+
     {
         name: string,
         resource_type: string,
