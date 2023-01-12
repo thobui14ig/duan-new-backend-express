@@ -98,7 +98,7 @@ export class ResourcesController{
         res.send(data[0]);
     }
 
-    async getComments (req: Request, res: Response) {
+    async getTask(req: Request, res: Response) {
         const { id } = req.params;
         const task = await ResourceModel.aggregate([{ 
             $lookup: { 
