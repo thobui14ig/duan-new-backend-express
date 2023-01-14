@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose'
 
 export interface IResource {
     name: string;
@@ -12,7 +12,7 @@ export interface IResource {
     comments: string[],
 }
 
-export interface ResourceModel extends IResource, Document {}
+export interface ResourceModelType extends IResource, Document {}
 
 
 const ResourcesSchema: Schema = new Schema(
@@ -33,7 +33,7 @@ const ResourcesSchema: Schema = new Schema(
         versionKey: false,
         // _id: true
     }
-);
+)
 
-const ResourceModel = mongoose.model<ResourceModel>('Resources', ResourcesSchema);
-export default ResourceModel;
+const ResourceModel = mongoose.model<ResourceModelType>('Resources', ResourcesSchema)
+export default ResourceModel

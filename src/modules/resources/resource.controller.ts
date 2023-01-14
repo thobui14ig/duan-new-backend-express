@@ -1,11 +1,14 @@
-import { Request, Response } from 'express';
-import mongoose from 'mongoose';
-import ResourceModel from '../../models/resource.model';
-const ObjectId = mongoose.Types.ObjectId;
+import { Request, Response } from 'express'
+import mongoose from 'mongoose'
+import GoogleApi from '../../libs/googleApi'
+import ResourceModel from './resource.model'
+
+const ObjectId = mongoose.Types.ObjectId
 
 export class ResourcesController{
 
     async menus(req: Request, res: Response){
+        
         const data = await ResourceModel.aggregate([
             { $lookup: { from: 'resources', localField: 'projects', foreignField: '_id', as: 'projects' } },
             // {
@@ -17,51 +20,50 @@ export class ResourcesController{
             //     $unwind: '$task' //chi tao ra object
             // },
 
-        ]);
-        res.send(data);
-
+        ])
+        res.send(data)
     }
 
     async insert(req: Request, res: Response){
-        console.log(req.body);
-        const { team, resource_type, project, sections, task } = req.body;
+        console.log(req.body)
+        const { team, resource_type, project, sections, task } = req.body
         
 
-        const resource = await ResourceModel.create({ ...req.body, createdBy: '63a6cae6d4b4cc4dde8f9098' });
+        const resource = await ResourceModel.create({ ...req.body, createdBy: '63a6cae6d4b4cc4dde8f9098' })
         if(resource_type === 'project'){
             await ResourceModel.updateOne(
                 { _id: team },
                 { $push: { projects: resource._id } }
-            );            
+            )            
         }
 
         if(resource_type === 'section'){
             await ResourceModel.updateOne(
                 { _id: project },
                 { $push: { sections: resource._id } }
-            );            
+            )            
         }
 
         if(resource_type === 'task'){
             await ResourceModel.updateOne(
                 { _id: sections[0] },
                 { $push: { tasks: resource._id } }
-            );            
+            )            
         }
 
         if(resource_type === 'comment'){
             await ResourceModel.updateOne(
                 { _id: task },
                 { $push: { comments: resource._id } }
-            );            
+            )            
         }
 
 
-        res.send('ok');
+        res.send('ok')
     }
 
     async getTeams(req: Request, res: Response) {
-        const { id } = req.params;
+        const { id } = req.params
         const data = await ResourceModel.aggregate([{ 
             $lookup: { 
                 from: 'resources', 
@@ -71,12 +73,12 @@ export class ResourcesController{
             } 
         },
         { '$match': { '_id': new ObjectId(id) } },
-        ]);
-        res.send(data[0]);
+        ])
+        res.send(data[0])
     }
 
     async getProjects(req: Request, res: Response) {
-        const { id } = req.params;
+        const { id } = req.params
         const data = await ResourceModel.aggregate([
             { $lookup: { 
                 from: 'resources', 
@@ -94,12 +96,12 @@ export class ResourcesController{
             } 
             },
             { '$match': { '_id': new ObjectId(id) } },
-        ]);
-        res.send(data[0]);
+        ])
+        res.send(data[0])
     }
 
     async getTask(req: Request, res: Response) {
-        const { id } = req.params;
+        const { id } = req.params
         const task = await ResourceModel.aggregate([{ 
             $lookup: { 
                 from: 'resources', 
@@ -130,9 +132,15 @@ export class ResourcesController{
             $unwind: '$createdBy' //chi tao ra object
         },
         { '$match': { '_id': new ObjectId(id) } },
-        ]);
+        ])
 
-        res.send(task[0]);
+        res.send(task[0])
+    }
+
+    async upload(req: Request, res: Response){
+        const googleApi = new GoogleApi()
+        await googleApi.uploadFile()
+        res.send('ok')
     }
 
 }
