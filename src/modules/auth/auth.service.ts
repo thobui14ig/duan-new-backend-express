@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import jwt from 'jsonwebtoken';
-import UserModel from '../../models/user.model';
-const promisify = require('util').promisify;
-const sign = promisify(jwt.sign).bind(jwt);
-const verify = promisify(jwt.verify).bind(jwt);
+import jwt from 'jsonwebtoken'
+import UserModel from '../users/user.model'
+const promisify = require('util').promisify
+const sign = promisify(jwt.sign).bind(jwt)
+const verify = promisify(jwt.verify).bind(jwt)
 
 export class AuthService{
     async generateToken(payload: any, secretSignature: any, tokenLife: any){
@@ -17,10 +17,10 @@ export class AuthService{
                     algorithm: 'HS256',
                     expiresIn: tokenLife,
                 },
-            );
+            )
         } catch (error) {
-            console.log(`Error in generate access token:  + ${error}`);
-            return null;
+            console.log(`Error in generate access token:  + ${error}`)
+            return null
         }
     }
 
@@ -28,10 +28,10 @@ export class AuthService{
         try {
             await UserModel.updateOne({ name },{
                 $set: { refreshToken }
-            });
-            return true;
+            })
+            return true
         } catch {
-            return false;
+            return false
         }
     }
 
@@ -39,19 +39,19 @@ export class AuthService{
         try {
             return await verify(token, secretKey, {
                 ignoreExpiration: true,
-            });
+            })
         } catch (error) {
-            console.log(`Error in decode access token: ${error}`);
-            return null;
+            console.log(`Error in decode access token: ${error}`)
+            return null
         }
     }
 
     async verifyToken(token: string, secretKey: any){
         try {
-            return await verify(token, secretKey);
+            return await verify(token, secretKey)
         } catch (error) {
-            console.log(`Error in verify access token:  + ${error}`);
-            return null;
+            console.log(`Error in verify access token:  + ${error}`)
+            return null
         }
     }
 }
