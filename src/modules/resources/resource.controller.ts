@@ -24,40 +24,43 @@ export class ResourcesController{
         res.send(data)
     }
 
-    async insert(req: Request, res: Response){
+    async insert(req: Request | any, res: Response){
         const { team, resource_type, project, sections, task } = req.body
-
-        const resource = await ResourceModel.create({ ...req.body, createdBy: req?.['user']._id })
-        if(resource_type === 'project'){
-            await ResourceModel.updateOne(
-                { _id: team },
-                { $push: { projects: resource._id } }
-            )            
+        try{
+            const resource = await ResourceModel.create({ ...req.body, createdBy: req?.['user']._id })
+            if(resource_type === 'project'){
+                await ResourceModel.updateOne(
+                    { _id: team },
+                    { $push: { projects: resource._id } }
+                )            
+            }
+    
+            if(resource_type === 'section'){
+                await ResourceModel.updateOne(
+                    { _id: project },
+                    { $push: { sections: resource._id } }
+                )            
+            }
+    
+            if(resource_type === 'task'){
+                await ResourceModel.updateOne(
+                    { _id: sections[0] },
+                    { $push: { tasks: resource._id } }
+                )            
+            }
+    
+            if(resource_type === 'comment'){
+                await ResourceModel.updateOne(
+                    { _id: task },
+                    { $push: { comments: resource._id } }
+                )            
+            }
+    
+            res.send(resource)
+        }catch(err){
+            res.status(500).send('Loi')
         }
 
-        if(resource_type === 'section'){
-            await ResourceModel.updateOne(
-                { _id: project },
-                { $push: { sections: resource._id } }
-            )            
-        }
-
-        if(resource_type === 'task'){
-            await ResourceModel.updateOne(
-                { _id: sections[0] },
-                { $push: { tasks: resource._id } }
-            )            
-        }
-
-        if(resource_type === 'comment'){
-            await ResourceModel.updateOne(
-                { _id: task },
-                { $push: { comments: resource._id } }
-            )            
-        }
-
-
-        res.send('ok')
     }
 
     async getTeams(req: Request, res: Response) {
