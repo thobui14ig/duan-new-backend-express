@@ -25,11 +25,9 @@ export class ResourcesController{
     }
 
     async insert(req: Request, res: Response){
-        console.log(req.body)
         const { team, resource_type, project, sections, task } = req.body
-        
 
-        const resource = await ResourceModel.create({ ...req.body, createdBy: '63a6cae6d4b4cc4dde8f9098' })
+        const resource = await ResourceModel.create({ ...req.body, createdBy: req?.['user']._id })
         if(resource_type === 'project'){
             await ResourceModel.updateOne(
                 { _id: team },

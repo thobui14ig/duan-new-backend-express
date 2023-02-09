@@ -23,7 +23,7 @@ export const isAuth = async(req: Request | any, res: Response, next: NextFunctio
     }
 
     const user = await UserModel.findOne({
-        name: verified.payload.username
+        name: verified.payload.name
     })
     
     req['user'] = user

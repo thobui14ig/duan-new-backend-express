@@ -1,5 +1,6 @@
 import { ResourcesController } from '../modules/resources/resource.controller'
 import express from 'express'
+import { isAuth } from '../middleware/user/isAuth.middleware'
 
 export abstract class BaseRouter {
     public app: express.Application
@@ -28,8 +29,8 @@ export default class ResourceRouter extends BaseRouter {
     this.router.get('/team/:id', (req, res) => this.controller.getTeams(req, res))
     this.router.get('/task/:id', (req, res) => this.controller.getTask(req, res))
     this.router.get('/project/:id', (req, res) =>this.controller.getProjects(req, res))
-    this.router.post('/insert', (req, res) => this.controller.insert(req, res))
-    // this.router.get('/', (req, res) => this.controller.upload(req, res))
+    this.router.post('/insert', isAuth, (req, res) => this.controller.insert(req, res))
+    this.router.get('/', (req, res) => this.controller.upload(req, res))
     
   }
 }
