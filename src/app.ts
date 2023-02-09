@@ -1,3 +1,4 @@
+import { isAuth } from './middleware/user/isAuth.middleware';
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
@@ -23,6 +24,7 @@ class App {
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(middleware.httpLogger)
+    this.app.use(isAuth)
   }
 
   private initializeControllers(controllers: any[]) {

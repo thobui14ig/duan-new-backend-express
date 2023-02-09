@@ -11,6 +11,12 @@ class GoogleApi{
     drive: any
 
     constructor(){
+        // console.log(1111,this.CLIENT_ID)
+        // console.log(1111, this.CLIENT_SECRET) 
+        // console.log(1111, this.REDIRECT_URI)
+
+
+        // console.log(1111, process.env.REFRESH_TOKEN)
         this.oauth2CLient = new google.auth.OAuth2(this.CLIENT_ID, this.CLIENT_SECRET, this.REDIRECT_URI)
         this.oauth2CLient.setCredentials({
             refresh_token: this.REFRESH_TOKEN,
@@ -23,20 +29,33 @@ class GoogleApi{
 
     async uploadFile() {
         try{
-            const createFile = await this.drive.files.create({
-                requestBody: {
-                    name: 'thobo.jpg',
-                    mimeType: 'image/jpg'
-                },
-                media: {
-                    mimeType: 'image/jpg',
-                    body: fs.createReadStream(path.join(__dirname, './cr7.jpeg'))
+            const file = fs.createReadStream(path.join(__dirname, './cr7.jpeg'))
+            fs.readFile(file.path, async(err, data) => {
+                if (err) {
+                  console.error(err);
+                  return;
                 }
-            })
-            console.log(createFile.data)
+          
+                // Convert the file to a Base64 encoded string.
+                const encodedData = new Buffer(data).toString('base64');
+                const createFile = await this.drive.files.create({
+                    requestBody: {
+                        name: 'thobo.jpg',
+                        mimeType: 'image/jpg'
+                    },
+                    media: {
+                        mimeType: 'image/jpg',
+                        body: encodedData
+                    }
+                })
+              });
+
+
+
         }catch(err){
-            console.log(err)
+            console.log(1111, err)
         }
+
     }
 }
 
