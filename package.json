@@ -34,16 +34,18 @@
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.1",
     "@types/mongoose": "^5.11.97",
+    "@types/socket.io": "^3.0.2",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.1",
+    "express": "^4.18.2",
     "googleapis": "^110.0.0",
     "helmet": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.3",
     "morgan": "^1.10.0",
     "rand-token": "^1.0.1",
+    "socket.io": "^4.5.4",
     "winston": "^3.7.2"
   }
 }
